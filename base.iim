@@ -1,4 +1,6 @@
 'date: 2015/06/08
+'main_maintainer:	Keyk	https://github.com/keyk
+
 SET !EXTRACT_TEST_POPUP NO
 SET !ERRORIGNORE YES
 SET !TIMEOUT_PAGE 999
