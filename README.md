@@ -3,15 +3,15 @@ A bot for auto-clicking in freebitco.in
 
 
 To use this Script you need the following:
-
-	* Firefox:						[Firefox]
-	* iMacros for firefox:			[iMacros]
 	
-	* This script
+* Firefox:						[Firefox]
+* iMacros for firefox:			[iMacros]
 
-	* An account in 9kw.eu:			[9kw]
+* This script
+
+* An account in 9kw.eu:			[9kw]
 	
-	* An account in freebitco.in:	[freebitcoin]
+* An account in freebitco.in:	[freebitcoin]
 
 
 	
