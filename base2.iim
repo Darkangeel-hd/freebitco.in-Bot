@@ -10,7 +10,7 @@ SET btc YOURBTCADRESS
 SET mail mail
 SET pw pass
 SET apikey API_KEY
-SET path ruta_al_directorio_temporal
+SET path temp_path
 SET file freebitcoin.jpg
 
 TAB OPEN
@@ -25,7 +25,7 @@ TAG POS=1 TYPE=INPUT:PASSWORD FORM=ID:login_form ATTR=ID:login_form_password CON
 EVENT TYPE=CLICK SELECTOR="#login_button" BUTTON=0
 WAIT SECONDS=5
 TAG POS=2 TYPE=BUTTON ATTR=CLASS:button<SP>medium<SP>success
-WAIT SECONDS=2
+WAIT SECONDS=5
 FILEDELETE NAME={{path}}{{file}}
 ONDOWNLOAD FOLDER={{path}} FILE={{file}}
 TAG POS=1 TYPE=SELECT ATTR=ID:free_play_captcha_types CONTENT=%solvemedia

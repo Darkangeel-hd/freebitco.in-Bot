@@ -10,7 +10,7 @@ SET btc YOURBTCADRESS
 SET mail mail
 SET pw pass
 SET apikey API_KEY
-SET path ruta_al_directorio_temporal
+SET path temp_path
 SET file freebitcoin.jpg
 
 TAB OPEN
@@ -19,13 +19,13 @@ TAB CLOSEALLOTHERS
 SET !TIMEOUT_PAGE 10
 URL GOTO={{url}}
 TAG POS=1 TYPE=BUTTON ATTR=ID:switch_to_login_button
-TAG POS=1 TYPE=INPUT:TEXT FORM=ID:login_form ATTR=ID:login_form_btc_address CONTENT={{mail}}
+TAG POS=1 TYPE=INPUT:TEXT FORM=ID:login_form ATTR=ID:login_form_btc_address CONTENT={{mail}} 'to login using the BTC addres change "mail" to "btc"
 SET !ENCRYPTION NO
 TAG POS=1 TYPE=INPUT:PASSWORD FORM=ID:login_form ATTR=ID:login_form_password CONTENT={{pw}}
 EVENT TYPE=CLICK SELECTOR="#login_button" BUTTON=0
 WAIT SECONDS=5
 TAG POS=2 TYPE=BUTTON ATTR=CLASS:button<SP>medium<SP>success
-WAIT SECONDS=2
+WAIT SECONDS=5
 FILEDELETE NAME={{path}}{{file}}
 ONDOWNLOAD FOLDER={{path}} FILE={{file}}
 TAG POS=1 TYPE=SELECT ATTR=ID:free_play_captcha_types CONTENT=%solvemedia
