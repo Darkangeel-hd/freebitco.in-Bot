@@ -6,7 +6,7 @@ To use this Script you need the following:
 
 * Firefox:						[Firefox]
 * iMacros for firefox:			[iMacros]
-* This script
+* This script:				[Freebitco.in-bot]
 * An account in 9kw.eu:			[9kw]	
 * An account in freebitco.in:	[freebitcoin]
 
@@ -49,5 +49,6 @@ you should change that to the following:
 	
 [Firefox]:https://www.mozilla.org/en-US/firefox/all/
 [iMacros]:https://addons.mozilla.org/es/firefox/addon/imacros-for-firefox/
+[Freebitco.in-bot]:https://github.com/DarkminecrafterHD/freebitco.in-Bot
 [9kw]:https://www.9kw.eu
 [freebitcoin]:http://freebitco.in/?r=1327941
