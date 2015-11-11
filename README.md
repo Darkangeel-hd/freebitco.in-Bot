@@ -50,5 +50,5 @@ you should change that to the following:
 [Firefox]:https://www.mozilla.org/en-US/firefox/all/
 [iMacros]:https://addons.mozilla.org/es/firefox/addon/imacros-for-firefox/
 [Freebitco.in-bot]:https://github.com/DarkminecrafterHD/freebitco.in-Bot
-[9kw]:https://www.9kw.eu
+[9kw]:https://www.9kw.eu/register_104519.html
 [freebitcoin]:http://freebitco.in/?r=1327941
