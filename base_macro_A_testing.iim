@@ -92,50 +92,50 @@ SET API_KEY EVAL("var s=\"{{API_KEY}}\"; if(s.match(/^[a-zA-Z0-9]+$/) && s.lengt
 SET PRIORITY EVAL("var s=\"{{PRIORITY}}\", d = parseFloat(s); if(d >= 0 && d <= 20) d; else MacroError(\"Value(Prio) is not in the set range.\")")
 
 
-''Request captcha solving'
-'TAB OPEN
-'TAB T=2
-'URL GOTO=http://www.9kw.eu/grafik/form.html
-'TAG POS=1 TYPE=INPUT ATTR=NAME:apikey CONTENT={{apikey}}
-''Priority in our system like min. 0 to max. 20 (cost +0-20)
-'TAG POS=1 TYPE=INPUT ATTR=NAME:prio CONTENT={{priority}}
-''Options for the form. See more under http://www.9kw.eu/grafik/form.html and http://www.9kw.eu/api.html
-'TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:selfsolve CONTENT=NO
-'TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:confirm CONTENT=NO
-'TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:case-sensitive CONTENT=NO
-''TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:nomd5 CONTENT=YES
-'TAG POS=1 TYPE=INPUT ATTR=NAME:source CONTENT=imacros
-''The path of the captcha picture saved is assigned to the CONTENT
-'TAG POS=1 TYPE=INPUT ATTR=NAME:file-upload-01 CONTENT={{path}}{{file}}
-''Submit the formdata to 9kw.eu
-'TAG POS=1 TYPE=INPUT ATTR=TYPE:submit
+'Request captcha solving'
+TAB OPEN
+TAB T=2
+URL GOTO=http://www.9kw.eu/grafik/form.html
+TAG POS=1 TYPE=INPUT ATTR=NAME:apikey CONTENT={{apikey}}
+'Priority in our system like min. 0 to max. 20 (cost +0-20)
+TAG POS=1 TYPE=INPUT ATTR=NAME:prio CONTENT={{priority}}
+'Options for the form. See more under http://www.9kw.eu/grafik/form.html and http://www.9kw.eu/api.html
+TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:selfsolve CONTENT=NO
+TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:confirm CONTENT=NO
+TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:case-sensitive CONTENT=NO
+'TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:nomd5 CONTENT=YES
+TAG POS=1 TYPE=INPUT ATTR=NAME:source CONTENT=imacros
+'The path of the captcha picture saved is assigned to the CONTENT
+TAG POS=1 TYPE=INPUT ATTR=NAME:file-upload-01 CONTENT={{path}}{{file}}
+'Submit the formdata to 9kw.eu
+TAG POS=1 TYPE=INPUT ATTR=TYPE:submit
 
-''Extract the captchaid from your captcha submit
-'TAG POS=1 TYPE=INPUT ATTR=NAME:captchaid EXTRACT=TXT
-'SET captcha_ID {{!EXTRACT}}
-''Clean the !EXTRACT variable for the next task
-'SET !EXTRACT NULL
+'Extract the captchaid from your captcha submit
+TAG POS=1 TYPE=INPUT ATTR=NAME:captchaid EXTRACT=TXT
+SET captcha_ID {{!EXTRACT}}
+'Clean the !EXTRACT variable for the next task
+SET !EXTRACT NULL
 
-''Extract the characters that are recoginzed from the picture of captcha.
-'TAG POS=1 TYPE=INPUT ATTR=NAME:result EXTRACT=TXT
-'TAB CLOSE
-'TAB T=1
+'Extract the characters that are recoginzed from the picture of captcha.
+TAG POS=1 TYPE=INPUT ATTR=NAME:result EXTRACT=TXT
+TAB CLOSE
+TAB T=1
 
-''Display extracted data (only for debug)
-''PROMPT {{CAPT_ID}}
+'Display extracted data (only for debug)
+'PROMPT {{CAPT_ID}}
 
-''Check the captcha answer (text or nothing like #EANF# = Extraction Anchor Not Found)
-'SET Answer EVAL("if (\"{{!EXTRACT}}\" == \"#EANF#\") {var x = \"\";} else {var x = \"{{!EXTRACT}}\";} x;")
-''Clean the !EXTRACT variable for the next task
-'SET !EXTRACT NULL
+'Check the captcha answer (text or nothing like #EANF# = Extraction Anchor Not Found)
+SET Answer EVAL("if (\"{{!EXTRACT}}\" == \"#EANF#\") {var x = \"\";} else {var x = \"{{!EXTRACT}}\";} x;")
+'Clean the !EXTRACT variable for the next task
+SET !EXTRACT NULL
 
 
-'TAB T=1
-'TAG POS=1 TYPE=INPUT ATTR=ID:adcopy_response CONTENT={{Answer}}
-'WAIT SECONDS=10
-'TAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:fcaptcha ATTR=*
-'TAG POS=1 TYPE=INPUT:SUBMIT ATTR=ID:free_play_form_button
-'TAB T=2
-'TAB CLOSE
+TAB T=1
+TAG POS=1 TYPE=INPUT ATTR=ID:adcopy_response CONTENT={{Answer}}
+WAIT SECONDS=10
+TAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:fcaptcha ATTR=*
+TAG POS=1 TYPE=INPUT:SUBMIT ATTR=ID:free_play_form_button
+TAB T=2
+TAB CLOSE
 
-'WAIT SECONDS=3620
+WAIT SECONDS=3620
