@@ -122,7 +122,7 @@ TAB CLOSE
 TAB T=1
 
 'Display extracted data (only for debug)
-'PROMPT {{CAPT_ID}}
+'PROMPT {{captcha_ID}}
 
 'Check the captcha answer (text or nothing like #EANF# = Extraction Anchor Not Found)
 SET Answer EVAL("if (\"{{!EXTRACT}}\" == \"#EANF#\") {var x = \"\";} else {var x = \"{{!EXTRACT}}\";} x;")
@@ -135,7 +135,24 @@ TAG POS=1 TYPE=INPUT ATTR=ID:adcopy_response CONTENT={{Answer}}
 WAIT SECONDS=10
 TAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:fcaptcha ATTR=*
 TAG POS=1 TYPE=INPUT:SUBMIT ATTR=ID:free_play_form_button
-TAB T=2
 TAB CLOSE
+
+'Check and send the captcha feedback back to the captcha service (OK:1, NotOK:2, EN: Right/False, DE: Richtig/Falsch)
+SEARCH SOURCE=REGEXP:"(Incorrect captcha entered|You win)" IGNORE_CASE=YES EXTRACT="$1"
+SET Feedback {{!EXTRACT}}
+'Display extracted data (only for debug)
+'PROMPT {{!EXTRACT}}
+'Clean the !EXTRACT variable
+SET !EXTRACT NULL
+SET feedback EVAL("if (\"{{Feedback}}\" == \"Incorrect captcha entered\") {var x = \"2\";} else {var x = \"1\";} x;")
+TAB OPEN
+TAB T=2
+URL GOTO=http://www.9kw.eu/index.cgi?source=imacros&action=usercaptchacorrectback&apikey={{API_KEY}}&correct={{feedback}}&id={{captcha_ID}}
+WAIT SECONDS=2
+TAB CLOSE
+TAB T=1
+
+'Cleanup: Delete the old captcha picture
+FILEDELETE NAME={{PATH}}{{FILE}}
 
 WAIT SECONDS=3620
