@@ -3,7 +3,8 @@
 
 'TESTING BUILD!!!!'
 'This is a testing build
-'Is not garantee to work in any way
+'Tested but
+'It's not garantee to work in any way
 
 SET !EXTRACT_TEST_POPUP NO
 SET !ERRORIGNORE YES
@@ -12,12 +13,11 @@ SET !TIMEOUT_STEP 999
 
 
 
-'=== CONFIGURATION ==='
+'===== CONFIGURATION ====='
 
 SET url http://freebitco.in/?r=1327941
 
 '= Login settings ='
-
 'Used when login-in by BTC address'
 SET btc YOURBTCADRESS
 'Used when login-in by mail'
@@ -43,9 +43,7 @@ SET file freebitcoin_{{!NOW:yyyymmdd_hhnnss}}.jpg
 'Priority in our system like min. 0 to max. 20 (cost +0-20)
 SET priority 0
 
-
-
-'=== END OF CONFIG ==='
+'===== END OF CONFIG ====='
 
 
 
@@ -68,9 +66,8 @@ WAIT SECONDS=5
 TAG POS=1 TYPE=A ATTR=TXT:CLAIM<SP>YOUR<SP>FREE<SP>BTC<SP>NOW!
 WAIT SECONDS=5
 
-
-''Delete old captcha image'			This code is useless since now captchas are
-''FILEDELETE NAME={{path}}{{file}}		given name by date and deletted after use
+''Delete old captcha image'		This code is useless since now captchas are
+''FILEDELETE NAME={{path}}{{file}}	given name by date and deletted after use
 
 'Download path and name'
 ONDOWNLOAD FOLDER={{path}} FILE={{file}}
@@ -155,4 +152,5 @@ TAB T=1
 'Cleanup: Delete the old captcha picture
 FILEDELETE NAME={{PATH}}{{FILE}}
 
+'Wait till the countdown end to make loops easy'
 WAIT SECONDS=3620
