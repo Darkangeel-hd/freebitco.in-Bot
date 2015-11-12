@@ -43,6 +43,10 @@ SET file freebitcoin_{{!NOW:yyyymmdd_hhnnss}}.jpg
 'Priority in our system like min. 0 to max. 20 (cost +0-20)
 SET priority 0
 
+'Set wait time for the requested captcha'
+'Default is 300, increase if low amount workers'
+SET Wait_9kw 300
+
 '===== END OF CONFIG ====='
 
 
@@ -69,12 +73,12 @@ WAIT SECONDS=5
 ''Delete old captcha image'		This code is useless since now captchas are
 ''FILEDELETE NAME={{path}}{{file}}	given name by date and deletted after use
 
-'Download path and name'
-ONDOWNLOAD FOLDER={{path}} FILE={{file}}
-
 'Switch captcha type'
 TAG POS=1 TYPE=SELECT ATTR=ID:free_play_captcha_types CONTENT=%solvemedia
 WAIT SECONDS=2
+
+'Set download path and name'
+ONDOWNLOAD FOLDER={{path}} FILE={{file}}
 
 'Save captcha image'
 TAG POS=1 TYPE=DIV ATTR=ID:adcopy-puzzle-image CONTENT=EVENT:SAVE_ELEMENT_SCREENSHOT
@@ -114,7 +118,7 @@ SET captcha_ID {{!EXTRACT}}
 SET !EXTRACT NULL
 
 'Extract the characters that are recoginzed from the picture of captcha.
-SET !TIMEOUT_STEP 300
+SET !TIMEOUT_STEP {{Wait_9kw}}
 TAG POS=1 TYPE=INPUT ATTR=NAME:result EXTRACT=TXT
 TAB CLOSE
 TAB T=1
@@ -130,7 +134,7 @@ SET !EXTRACT NULL
 
 TAB T=1
 TAG POS=1 TYPE=INPUT ATTR=ID:adcopy_response CONTENT={{Answer}}
-WAIT SECONDS=10
+WAIT SECONDS=5
 TAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:fcaptcha ATTR=*
 TAG POS=1 TYPE=INPUT:SUBMIT ATTR=ID:free_play_form_button
 
