@@ -3,8 +3,7 @@
 
 'TESTING BUILD!!!!'
 'This is a testing build
-'Tested but
-'It's not garantee to work in any way
+'Tested: working, but may have issues
 
 SET !EXTRACT_TEST_POPUP NO
 SET !ERRORIGNORE YES
@@ -19,7 +18,7 @@ SET url http://freebitco.in/?r=1327941
 
 '= Login settings ='
 'Used when login-in by BTC address'
-SET btc YOURBTCADRESS
+SET btc YOUR_BTC_ADDRESS
 'Used when login-in by mail'
 SET mail mail
 'The password of your freebetco.in account'
@@ -33,6 +32,8 @@ SET apikey API_KEY
 
 '= Path and captcha settings ='
 'path where captchas will be temporaly sabed'
+' Path to the captcha image with timestamp
+' Tempfolder like C:\ or C:\TEMP\ under windows or like /tmp/ under linux
 SET path temp_path
 'filename of the saved captcha'
 SET file freebitcoin_{{!NOW:yyyymmdd_hhnnss}}.jpg
