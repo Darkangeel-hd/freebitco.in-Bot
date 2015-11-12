@@ -1,4 +1,4 @@
-'date: 2015/06/11
+'date: 2015/11/12
 'main_maintainer:	Darkangeel_hd	https://github.com/DarkminecrafterHD
 
 'TESTING BUILD!!!!'
@@ -88,8 +88,8 @@ WAIT SECONDS={{WAIT_TM_0}}
 
 
 'Syntaxcheck: API Key, prio
-SET API_KEY EVAL("var s=\"{{API_KEY}}\"; if(s.match(/^[a-zA-Z0-9]+$/) && s.length <= 50 && s.length >= 5) s; else MacroError(\"API Key is wrong.\")")
-SET PRIORITY EVAL("var s=\"{{PRIORITY}}\", d = parseFloat(s); if(d >= 0 && d <= 20) d; else MacroError(\"Value(Prio) is not in the set range.\")")
+SET API_KEY EVAL("var s=\"{{apikey}}\"; if(s.match(/^[a-zA-Z0-9]+$/) && s.length <= 50 && s.length >= 5) s; else MacroError(\"API Key is wrong.\")")
+SET PRIORITY EVAL("var s=\"{{priority}}\", d = parseFloat(s); if(d >= 0 && d <= 20) d; else MacroError(\"Value(Prio) is not in the set range.\")")
 
 
 'Request captcha solving'
@@ -117,6 +117,7 @@ SET captcha_ID {{!EXTRACT}}
 SET !EXTRACT NULL
 
 'Extract the characters that are recoginzed from the picture of captcha.
+SET !TIMEOUT_STEP 300
 TAG POS=1 TYPE=INPUT ATTR=NAME:result EXTRACT=TXT
 TAB CLOSE
 TAB T=1
@@ -135,7 +136,6 @@ TAG POS=1 TYPE=INPUT ATTR=ID:adcopy_response CONTENT={{Answer}}
 WAIT SECONDS=10
 TAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:fcaptcha ATTR=*
 TAG POS=1 TYPE=INPUT:SUBMIT ATTR=ID:free_play_form_button
-TAB CLOSE
 
 'Check and send the captcha feedback back to the captcha service (OK:1, NotOK:2, EN: Right/False, DE: Richtig/Falsch)
 SEARCH SOURCE=REGEXP:"(Incorrect captcha entered|You win)" IGNORE_CASE=YES EXTRACT="$1"
@@ -144,7 +144,7 @@ SET Feedback {{!EXTRACT}}
 'PROMPT {{!EXTRACT}}
 'Clean the !EXTRACT variable
 SET !EXTRACT NULL
-SET feedback EVAL("if (\"{{Feedback}}\" == \"Incorrect captcha entered\") {var x = \"2\";} else {var x = \"1\";} x;")
+SET Feedback EVAL("if (\"{{Feedback}}\" == \"Incorrect captcha entered\") {var x = \"2\";} else {var x = \"1\";} x;")
 TAB OPEN
 TAB T=2
 URL GOTO=http://www.9kw.eu/index.cgi?source=imacros&action=usercaptchacorrectback&apikey={{API_KEY}}&correct={{feedback}}&id={{captcha_ID}}
