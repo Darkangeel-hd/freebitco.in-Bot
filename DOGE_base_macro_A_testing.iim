@@ -59,11 +59,11 @@ SET !TIMEOUT_PAGE 10
 URL GOTO={{url}}
 
 'Login in'
-TAG POS=1 TYPE=BUTTON ATTR=ID:switch_to_login_button
-TAG POS=1 TYPE=INPUT:TEXT FORM=ID:login_form ATTR=ID:login_form_btc_address CONTENT={{mail}}
+TAG POS=1 TYPE=A ATTR=TXT:LOGIN
+TAG POS=1 TYPE=INPUT:TEXT FORM=ID:login_form ATTR=ID:login_form_doge_address CONTENT={{mail}}
 SET !ENCRYPTION NO
 TAG POS=1 TYPE=INPUT:PASSWORD FORM=ID:login_form ATTR=ID:login_form_password CONTENT={{pw}}
-EVENT TYPE=CLICK SELECTOR="#login_button" BUTTON=0
+TAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:login_form ATTR=ID:login_button
 WAIT SECONDS=5
 
 'Push claim button'
