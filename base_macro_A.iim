@@ -1,5 +1,6 @@
-'date: 2015/06/11
+'date: 2016/05/19
 'main_maintainer:	Darkangeel_hd	https://github.com/DarkminecrafterHD
+
 
 SET !EXTRACT_TEST_POPUP NO
 SET !ERRORIGNORE YES
@@ -7,56 +8,151 @@ SET !TIMEOUT_PAGE 999
 SET !TIMEOUT_STEP 999
 
 
-SET url http://freebitco.in/?r=1327941
-SET btc YOURBTCADRESS
-SET mail mail
-SET pw pass
-SET apikey API_KEY
-SET path temp_path
-SET file freebitcoin.jpg
 
+'===== CONFIGURATION ====='
+
+SET url http://freebitco.in/?r=1327941
+
+'= Login settings ='
+'Used when login-in by BTC address'
+SET btc YOUR_BTC_ADDRESS
+'Used when login-in by mail'
+SET mail mail
+'The password of your freebetco.in account'
+SET pw pass
+
+
+'= API KEY ='
+'API key from 9kw.eu'
+SET apikey API_KEY
+
+
+'= Path and captcha settings ='
+'path where captchas will be temporaly sabed'
+' Path to the captcha image with timestamp
+' Tempfolder like C:\ or C:\TEMP\ under windows or like /tmp/ under linux
+SET path temp_path
+'filename of the saved captcha'
+SET file freebitcoin_{{!NOW:yyyymmdd_hhnnss}}.jpg
+'''SET file freebitcoin.jpg
+
+
+'And priority (prio 1-20)
+'Priority in our system like min. 0 to max. 20 (cost +0-20)
+SET priority 0
+
+'Set wait time for the requested captcha'
+'Default is 300, increase if low amount workers'
+SET Wait_9kw 300
+
+'===== END OF CONFIG ====='
+
+
+
+'Open the page'
 TAB OPEN
 TAB T=1
 TAB CLOSEALLOTHERS
-SET !TIMEOUT_PAGE 10
 URL GOTO={{url}}
-TAG POS=1 TYPE=BUTTON ATTR=ID:switch_to_login_button
+SET !TIMEOUT_PAGE 30
+
+'Login in'
+TAG POS=1 TYPE=A ATTR=TXT:LOGIN
 TAG POS=1 TYPE=INPUT:TEXT FORM=ID:login_form ATTR=ID:login_form_btc_address CONTENT={{mail}}
 SET !ENCRYPTION NO
 TAG POS=1 TYPE=INPUT:PASSWORD FORM=ID:login_form ATTR=ID:login_form_password CONTENT={{pw}}
-EVENT TYPE=CLICK SELECTOR="#login_button" BUTTON=0
+TAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:login_form ATTR=ID:login_button
 WAIT SECONDS=5
+
+'Push claim button'
 TAG POS=1 TYPE=A ATTR=TXT:CLAIM<SP>YOUR<SP>FREE<SP>BTC<SP>NOW!
 WAIT SECONDS=5
-FILEDELETE NAME={{path}}{{file}}
+
+''Delete old captcha image'		This code is useless since now captchas are
+''FILEDELETE NAME={{path}}{{file}}	given name by date and deletted after use
+
+'Switch captcha type'
+TAG POS=1 TYPE=SELECT ATTR=ID:free_play_captcha_types CONTENT=%solvemedia
+WAIT SECONDS=2
+
+'Set download path and name'
 ONDOWNLOAD FOLDER={{path}} FILE={{file}}
 
-TAG POS=1 TYPE=SELECT ATTR=ID:free_play_captcha_types CONTENT=%solvemedia
-
-WAIT SECONDS=2
+'Save captcha image'
 TAG POS=1 TYPE=DIV ATTR=ID:adcopy-puzzle-image CONTENT=EVENT:SAVE_ELEMENT_SCREENSHOT
-WAIT SECONDS=5
 
+'Wait a random number (1 to 5) of seconds
+SET WAIT_TM_0 EVAL("Math.floor(Math.random()*5 + 1);")
+WAIT SECONDS={{WAIT_TM_0}}
+
+
+'Syntaxcheck: API Key, prio
+SET API_KEY EVAL("var s=\"{{apikey}}\"; if(s.match(/^[a-zA-Z0-9]+$/) && s.length <= 50 && s.length >= 5) s; else MacroError(\"API Key is wrong.\")")
+SET PRIORITY EVAL("var s=\"{{priority}}\", d = parseFloat(s); if(d >= 0 && d <= 20) d; else MacroError(\"Value(Prio) is not in the set range.\")")
+
+
+'Request captcha solving'
 TAB OPEN
 TAB T=2
 URL GOTO=http://www.9kw.eu/grafik/form.html
 TAG POS=1 TYPE=INPUT ATTR=NAME:apikey CONTENT={{apikey}}
-TAG POS=1 TYPE=INPUT ATTR=NAME:prio CONTENT=0
+'Priority in our system like min. 0 to max. 20 (cost +0-20)
+TAG POS=1 TYPE=INPUT ATTR=NAME:prio CONTENT={{priority}}
+'Options for the form. See more under http://www.9kw.eu/grafik/form.html and http://www.9kw.eu/api.html
 TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:selfsolve CONTENT=NO
 TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:confirm CONTENT=NO
 TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:case-sensitive CONTENT=NO
+'TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:nomd5 CONTENT=YES
 TAG POS=1 TYPE=INPUT ATTR=NAME:source CONTENT=imacros
+'The path of the captcha picture saved is assigned to the CONTENT
 TAG POS=1 TYPE=INPUT ATTR=NAME:file-upload-01 CONTENT={{path}}{{file}}
+'Submit the formdata to 9kw.eu
 TAG POS=1 TYPE=INPUT ATTR=TYPE:submit
-SET !TIMEOUT_STEP 300
+
+'Extract the captchaid from your captcha submit
+TAG POS=1 TYPE=INPUT ATTR=NAME:captchaid EXTRACT=TXT
+SET captcha_ID {{!EXTRACT}}
+'Clean the !EXTRACT variable for the next task
+SET !EXTRACT NULL
+
+'Extract the characters that are recoginzed from the picture of captcha.
+SET !TIMEOUT_STEP {{Wait_9kw}}
 TAG POS=1 TYPE=INPUT ATTR=NAME:result EXTRACT=TXT
+TAB CLOSE
+TAB T=1
+
+'Display extracted data (only for debug)
+'PROMPT {{captcha_ID}}
+
+'Check the captcha answer (text or nothing like #EANF# = Extraction Anchor Not Found)
+SET Answer EVAL("if (\"{{!EXTRACT}}\" == \"#EANF#\") {var x = \"\";} else {var x = \"{{!EXTRACT}}\";} x;")
+'Clean the !EXTRACT variable for the next task
+SET !EXTRACT NULL
+
 
 TAB T=1
-TAG POS=1 TYPE=INPUT ATTR=ID:adcopy_response CONTENT={{!EXTRACT}}
-WAIT SECONDS=10
+TAG POS=1 TYPE=INPUT ATTR=ID:adcopy_response CONTENT={{Answer}}
+WAIT SECONDS=5
 TAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:fcaptcha ATTR=*
 TAG POS=1 TYPE=INPUT:SUBMIT ATTR=ID:free_play_form_button
-TAB T=2
-TAB CLOSE
 
+'Check and send the captcha feedback back to the captcha service (OK:1, NotOK:2, EN: Right/False, DE: Richtig/Falsch)
+SEARCH SOURCE=REGEXP:"(Incorrect captcha entered|You win)" IGNORE_CASE=YES EXTRACT="$1"
+SET Feedback {{!EXTRACT}}
+'Display extracted data (only for debug)
+'PROMPT {{!EXTRACT}}
+'Clean the !EXTRACT variable
+SET !EXTRACT NULL
+SET Feedback EVAL("if (\"{{Feedback}}\" == \"Incorrect captcha entered\") {var x = \"2\";} else {var x = \"1\";} x;")
+TAB OPEN
+TAB T=2
+URL GOTO=http://www.9kw.eu/index.cgi?source=imacros&action=usercaptchacorrectback&apikey={{API_KEY}}&correct={{feedback}}&id={{captcha_ID}}
+WAIT SECONDS=2
+TAB CLOSE
+TAB T=1
+
+'Cleanup: Delete the old captcha picture
+FILEDELETE NAME={{PATH}}{{FILE}}
+
+'Wait till the countdown end to make loops easy'
 WAIT SECONDS=3620
