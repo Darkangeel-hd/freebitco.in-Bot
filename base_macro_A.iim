@@ -1,4 +1,4 @@
-'date: 2016/05/19
+'date: 2017/09/24
 'main_maintainer:	Darkangeel_hd	https://github.com/DarkminecrafterHD
 
 
@@ -64,22 +64,19 @@ TAG POS=1 TYPE=INPUT:PASSWORD FORM=ID:login_form ATTR=ID:login_form_password CON
 TAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:login_form ATTR=ID:login_button
 WAIT SECONDS=5
 
-'Push claim button'
-TAG POS=1 TYPE=A ATTR=TXT:CLAIM<SP>YOUR<SP>FREE<SP>BTC<SP>NOW!
-WAIT SECONDS=5
 
 ''Delete old captcha image'		This code is useless since now captchas are
 ''FILEDELETE NAME={{path}}{{file}}	given name by date and deletted after use
 
-'Switch captcha type'
-TAG POS=1 TYPE=SELECT ATTR=ID:free_play_captcha_types CONTENT=%solvemedia
-WAIT SECONDS=2
 
 'Set download path and name'
 ONDOWNLOAD FOLDER={{path}} FILE={{file}}
 
 'Save captcha image'
-TAG POS=1 TYPE=DIV ATTR=ID:adcopy-puzzle-image CONTENT=EVENT:SAVE_ELEMENT_SCREENSHOT
+'only captcha image
+'TAG POS=1 TYPE=DIV ATTR=CLASS:captchasnet_captcha_content CONTENT=EVENT:SAVE_ELEMENT_SCREENSHOT
+'whole captcha frame
+TAG POS=1 TYPE=DIV ATTR=ID:captchasnet_free_play_captcha CONTENT=EVENT:SAVE_ELEMENT_SCREENSHOT
 
 'Wait a random number (1 to 5) of seconds
 SET WAIT_TM_0 EVAL("Math.floor(Math.random()*5 + 1);")
