@@ -5,7 +5,7 @@ A bot for auto-clicking in freebitco.in
 To use this Script you need the following:
 
 * Firefox:						[Firefox]
-* iMacros for firefox:			[iMacros]
+* iMacros 8.9.7 for firefox:			[iMacros]
 * This script:				[Freebitco.in-bot]
 * An account in 9kw.eu:			[9kw]	
 * An account in freebitco.in:	[freebitcoin]
@@ -48,7 +48,7 @@ you should change that to the following:
 
 	
 [Firefox]:https://www.mozilla.org/en-US/firefox/all/
-[iMacros]:https://addons.mozilla.org/es/firefox/addon/imacros-for-firefox/
+[iMacros]:https://addons.mozilla.org/es/firefox/addon/imacros-for-firefox/versions/
 [Freebitco.in-bot]:https://github.com/DarkminecrafterHD/freebitco.in-Bot
 [9kw]:https://www.9kw.eu/register_104519.html
 [freebitcoin]:http://freebitco.in/?r=1327941
