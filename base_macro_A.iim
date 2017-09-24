@@ -128,19 +128,20 @@ SET !EXTRACT NULL
 
 
 TAB T=1
-TAG POS=1 TYPE=INPUT ATTR=ID:adcopy_response CONTENT={{Answer}}
+'TAG POS=1 TYPE=INPUT:TEXT ATTR=* CONTENT={{Answer}}" 'by sickboy2711
+TAG POS=1 TYPE=INPUT:TEXT ATTR=CLASS:captchasnet_captcha_input_box CONTENT={{Answer}}
 WAIT SECONDS=5
 TAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:fcaptcha ATTR=*
 TAG POS=1 TYPE=INPUT:SUBMIT ATTR=ID:free_play_form_button
 
 'Check and send the captcha feedback back to the captcha service (OK:1, NotOK:2, EN: Right/False, DE: Richtig/Falsch)
-SEARCH SOURCE=REGEXP:"(Incorrect captcha entered|You win)" IGNORE_CASE=YES EXTRACT="$1"
+SEARCH SOURCE=REGEXP:"(Captcha is incorrect|You win)" IGNORE_CASE=YES EXTRACT="$1"
 SET Feedback {{!EXTRACT}}
 'Display extracted data (only for debug)
 'PROMPT {{!EXTRACT}}
 'Clean the !EXTRACT variable
 SET !EXTRACT NULL
-SET Feedback EVAL("if (\"{{Feedback}}\" == \"Incorrect captcha entered\") {var x = \"2\";} else {var x = \"1\";} x;")
+SET Feedback EVAL("if (\"{{Feedback}}\" == \"Captcha is incorrect\") {var x = \"2\";} else {var x = \"1\";} x;")
 TAB OPEN
 TAB T=2
 URL GOTO=http://www.9kw.eu/index.cgi?source=imacros&action=usercaptchacorrectback&apikey={{API_KEY}}&correct={{feedback}}&id={{captcha_ID}}
