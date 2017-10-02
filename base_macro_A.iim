@@ -125,6 +125,7 @@ TAG POS=1 TYPE=TEXTAREA ATTR=ID:g-recaptcha-response CONTENT={{answer}}
 WAIT SECONDS=5
 TAG POS=1 TYPE=INPUT:SUBMIT ATTR=ID:free_play_form_button
 
+
 'Check and send the captcha feedback back to the captcha service (OK:1, NotOK:2, EN: Right/False, DE: Richtig/Falsch)
 SEARCH SOURCE=REGEXP:"(Captcha is incorrect|You win)" IGNORE_CASE=YES EXTRACT="$1"
 SET Feedback {{!EXTRACT}}

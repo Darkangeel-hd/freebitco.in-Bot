@@ -4,47 +4,57 @@ A bot for auto-clicking in freebitco.in
 
 To use this Script you need the following:
 
-* Firefox:						[Firefox]
+* Firefox (version 57 or below):						[Firefox]
 * iMacros 8.9.7 for firefox:			[iMacros]
 * This script:				[Freebitco.in-bot]
 * An account in 9kw.eu:			[9kw]	
 * An account in freebitco.in:	[freebitcoin]
 
 
-    the difference between base.iim and base.iim is that base.iim logouts
-    you after every roll and the next hour will log in and roll another time
-    while base2.imm will log in but not logout
 
 
 To use the macros you have to edit these parts of the code:
 ```imacros
+'===== CONFIGURATION ====='
+
 SET url http://freebitco.in/?r=1327941
-SET btc YOURBTCADRESS
+
+'= Login settings ='
+'Used when login-in by BTC address'
+SET btc YOUR_BTC_ADDRESS
+'Used when login-in by mail'
 SET mail mail
+'The password of your freebetco.in account'
 SET pw pass
+
+
+'= API KEY ='
+'API key from 9kw.eu'
 SET apikey API_KEY
-SET path ruta_al_directorio_temporal
-SET file freebitcoin.jpg
+
+
+'And priority (prio 1-20)
+'Priority in our system like min. 0 to max. 20 (cost +0-20)
+SET priority 0
+
+'Set wait time for the requested captcha'
+'Default is 300, increase if low amount workers'
+SET Wait_9kw 300
+
+'===== END OF CONFIG ====='
 ```
 and
 ```
 TAG POS=1 TYPE=INPUT:TEXT FORM=ID:login_form ATTR=ID:login_form_btc_address CONTENT={{mail}}
 ```
 
-you should change that to the following:
+you should change the following:
 
-    line 9		"YOURBTCADRESS" to your login bitcoin addres in freebitco.in
-    line 10		the seccond "mail" to your email addres in freebitco.in
-    line 11		"pass" to your freebitco.in password
-    line 12		"API_KEY" to the API Key of 9kw that your are using to submit captchas
-    line 13		"temp_path" to the path where a temporal file with the captcha image will be created
-					in windows this could be for example C:\tmp\ or C:\users\youruser\tmp\
-					in linux /tmp/ or /home/youruser/tmp/
-
-					remember to put the \ or the / after the path, if you don't it won't work
-        
-    line 14		"freebitcoin.jpg" is the name that the saved image will have, you could leave it as it
-    line 22		if you want to login with your  BTC address instead of your mail, change "mail" to "btc"
+    line 20		"YOURBTCADRESS" to your login bitcoin addres in freebitco.in
+    line 22		the seccond "mail" to your email addres in freebitco.in
+    line 24		"pass" to your freebitco.in password
+    line 29		"API_KEY" to the API Key of 9kw that your are using to submit captchas
+    line 53		if you want to login with your  BTC address instead of your mail, change "mail" to "btc"
 
 	
 [Firefox]:https://www.mozilla.org/en-US/firefox/all/
