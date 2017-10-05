@@ -12,6 +12,10 @@ To use this Script you need the following:
 
 
 
+There're two main macros base_macro_A and base_macro_Av2  
+base_macro_A is for text captcha  
+base_macro_Av2 is for recaptchav2
+
 
 To use the macros you have to edit these parts of the code:
 ```imacros
