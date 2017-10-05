@@ -37,6 +37,11 @@ SET priority 0
 'Default is 300, increase if low amount workers'
 SET Wait_9kw 300
 
+'Set wait time for the next roll'
+'Default is 3620, if fail to roll, 10'
+SET Wait_nextRoll 3620
+SET Wait_failRoll 10
+
 '===== END OF CONFIG ====='
 
 
@@ -142,5 +147,12 @@ TAB CLOSE
 TAB T=1
 
 
+' Evaluate Roll results and set wait time for next roll or retry
+WAIT SECONDS=5
+SET Wait4Roll EVAL("if ( \"{{Feedback}}\" == 2) { var x = \"{{Wait_failRoll}}\";} else {var x = \"{{Wait_nextRoll}}\";} x;")
+'Display wait time (only for debug)
+''PROMPT {{Wait4Roll}}
+
 'Wait till the countdown end to make loops easy'
-WAIT SECONDS=3620
+'WAIT SECONDS={{Wait_nextRoll}}
+WAIT SECONDS={{Wait4Roll}}
