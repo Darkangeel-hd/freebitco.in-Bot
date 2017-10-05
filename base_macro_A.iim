@@ -6,8 +6,6 @@ SET !EXTRACT_TEST_POPUP NO
 SET !ERRORIGNORE YES
 SET !TIMEOUT_PAGE 999
 SET !TIMEOUT_STEP 999
-'Single step mode (only for debug)
-'SET !SINGLESTEP YES
 
 
 
@@ -27,6 +25,16 @@ SET pw pass
 '= API KEY ='
 'API key from 9kw.eu'
 SET apikey API_KEY
+
+
+'= Path and captcha settings ='
+'path where captchas will be temporaly sabed'
+' Path to the captcha image with timestamp
+' Tempfolder like C:\ or C:\TEMP\ under windows or like /tmp/ under linux
+SET path temp_path
+'filename of the saved captcha'
+SET file freebitcoin_{{!NOW:yyyymmdd_hhnnss}}.jpg
+'''SET file freebitcoin.jpg
 
 
 'And priority (prio 1-20)
@@ -57,72 +65,73 @@ TAG POS=1 TYPE=BUTTON ATTR=ID:login_button
 WAIT SECONDS=5
 
 
+''Delete old captcha image'		This code is useless since now captchas are
+''FILEDELETE NAME={{path}}{{file}}	given name by date and deletted after use
+
+
+'Set download path and name'
+ONDOWNLOAD FOLDER={{path}} FILE={{file}}
+
+'Save captcha image'
+'only captcha image
+'TAG POS=1 TYPE=DIV ATTR=CLASS:captchasnet_captcha_content CONTENT=EVENT:SAVE_ELEMENT_SCREENSHOT
+'whole captcha frame
+TAG POS=1 TYPE=DIV ATTR=ID:captchasnet_free_play_captcha CONTENT=EVENT:SAVE_ELEMENT_SCREENSHOT
+
 'Wait a random number (1 to 5) of seconds
 SET WAIT_TM_0 EVAL("Math.floor(Math.random()*5 + 1);")
 WAIT SECONDS={{WAIT_TM_0}}
-
-
-'Save the captcha key and show the field for the answer
-URL GOTO=javascript:(function(){var<SP>x<SP>=<SP>document.getElementById("g-recaptcha-response");x.style.display<SP>=<SP>"";})();
-TAG POS=1 TYPE=DIV ATTR=CLASS:g-recaptcha EXTRACT=HTM
-SET datasitekey EVAL("var sitekey = \"{{!EXTRACT}}\";var rx = new RegExp('sitekey=\"([^\"]+)\"','i'); var x = sitekey.match(rx)[1];  x;")
-'Clean the !EXTRACT variable for the next task
-SET !EXTRACT NULL
 
 
 'Syntaxcheck: API Key, prio
 SET API_KEY EVAL("var s=\"{{apikey}}\"; if(s.match(/^[a-zA-Z0-9]+$/) && s.length <= 50 && s.length >= 5) s; else MacroError(\"API Key is wrong.\")")
 SET PRIORITY EVAL("var s=\"{{priority}}\", d = parseFloat(s); if(d >= 0 && d <= 20) d; else MacroError(\"Value(Prio) is not in the set range.\")")
 
-SET pageurl EVAL("domain = \"{{!URLCURRENT}}\".split(\"://\")[1];domain.split(\"/\")[0];")
 
-
-'Open a new tab, and go to 9kw.eu, and submit the captcha picture
+'Request captcha solving'
 TAB OPEN
 TAB T=2
-URL GOTO=http://www.9kw.eu/grafik/form_base64.html
+URL GOTO=http://www.9kw.eu/grafik/form.html
 TAG POS=1 TYPE=INPUT ATTR=NAME:apikey CONTENT={{apikey}}
 'Priority in our system like min. 0 to max. 20 (cost +0-20)
 TAG POS=1 TYPE=INPUT ATTR=NAME:prio CONTENT={{priority}}
-'Options for the form. See more under http://www.9kw.eu/grafik/form_base64.html and http://www.9kw.eu/api.html
+'Options for the form. See more under http://www.9kw.eu/grafik/form.html and http://www.9kw.eu/api.html
 TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:selfsolve CONTENT=NO
 TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:confirm CONTENT=NO
-TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:base64 CONTENT=NO
-TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:interactive CONTENT=YES
 TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:case-sensitive CONTENT=NO
-TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:nomd5 CONTENT=YES
-TAG POS=1 TYPE=INPUT ATTR=NAME:maxtimeout CONTENT={{Wait_9kw}}
+'TAG POS=1 TYPE=INPUT:CHECKBOX FORM=ACTION:/index.cgi ATTR=NAME:nomd5 CONTENT=YES
 TAG POS=1 TYPE=INPUT ATTR=NAME:source CONTENT=imacros
-TAG POS=1 TYPE=INPUT ATTR=NAME:oldsource CONTENT=recaptchav2
-TAG POS=1 TYPE=INPUT ATTR=NAME:pageurl CONTENT={{pageurl}}
-TAG POS=1 TYPE=INPUT ATTR=NAME:file-upload-01 CONTENT={{datasitekey}}
+'The path of the captcha picture saved is assigned to the CONTENT
+TAG POS=1 TYPE=INPUT ATTR=NAME:file-upload-01 CONTENT={{path}}{{file}}
 'Submit the formdata to 9kw.eu
 TAG POS=1 TYPE=INPUT ATTR=TYPE:submit
 
-SET !TIMEOUT_STEP {{Wait_9kw}}
 'Extract the captchaid from your captcha submit
 TAG POS=1 TYPE=INPUT ATTR=NAME:captchaid EXTRACT=TXT
 SET captcha_ID {{!EXTRACT}}
 'Clean the !EXTRACT variable for the next task
 SET !EXTRACT NULL
+
 'Extract the characters that are recoginzed from the picture of captcha.
+SET !TIMEOUT_STEP {{Wait_9kw}}
 TAG POS=1 TYPE=INPUT ATTR=NAME:result EXTRACT=TXT
-'Step 4: Check the captcha answer (text or nothing like #EANF# = Extraction Anchor Not Found)
-SET Answer EVAL("if (\"{{!EXTRACT}}\" == \"#EANF#\") {var x = \"\";} else {var x = \"{{!EXTRACT}}\";} x;")
-'Clean the !EXTRACT variable for the next task
-SET !EXTRACT NULL
 TAB CLOSE
+TAB T=1
 
 'Display extracted data (only for debug)
 'PROMPT {{captcha_ID}}
 
+'Check the captcha answer (text or nothing like #EANF# = Extraction Anchor Not Found)
+SET Answer EVAL("if (\"{{!EXTRACT}}\" == \"#EANF#\") {var x = \"\";} else {var x = \"{{!EXTRACT}}\";} x;")
+'Clean the !EXTRACT variable for the next task
+SET !EXTRACT NULL
 
-'Fill the recognized characters to the verification box
+
 TAB T=1
-TAG POS=1 TYPE=TEXTAREA ATTR=ID:g-recaptcha-response CONTENT={{answer}}
-
-
+'TAG POS=1 TYPE=INPUT:TEXT ATTR=* CONTENT={{Answer}}" 'by sickboy2711
+TAG POS=1 TYPE=INPUT:TEXT ATTR=CLASS:captchasnet_captcha_input_box CONTENT={{Answer}}
 WAIT SECONDS=5
+TAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:fcaptcha ATTR=*
 TAG POS=1 TYPE=INPUT:SUBMIT ATTR=ID:free_play_form_button
 
 
@@ -141,6 +150,8 @@ WAIT SECONDS=2
 TAB CLOSE
 TAB T=1
 
+'Cleanup: Delete the old captcha picture
+FILEDELETE NAME={{PATH}}{{FILE}}
 
 'Wait till the countdown end to make loops easy'
 WAIT SECONDS=3620
