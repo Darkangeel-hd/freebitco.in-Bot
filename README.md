@@ -4,7 +4,8 @@ A bot for auto-clicking in freebitco.in
 
 To use this Script you need the following:
 
-* Firefox (version 57 or below):						[Firefox]
+* Firefox (version 56.0.2 or below):						[Firefox]
+* Or Waterfox:  [Waterfox]
 * iMacros 8.9.7 for firefox:			[iMacros]
 * This script:				[Freebitco.in-bot]
 * An account in 9kw.eu:			[9kw]	
@@ -68,8 +69,9 @@ you should change the following:
     line 22		if you want to login with your  BTC address instead of your mail, change "mail" to "btc"
 
 	
-[Firefox]:https://www.mozilla.org/en-US/firefox/all/
+[Firefox]:https://ftp.mozilla.org/pub/firefox/releases/56.0.2/
+[Waterfox]:https://www.waterfoxproject.org/
 [iMacros]:https://addons.mozilla.org/es/firefox/addon/imacros-for-firefox/versions/
-[Freebitco.in-bot]:https://github.com/DarkminecrafterHD/freebitco.in-Bot
+[Freebitco.in-bot]:https://github.com/Darkangeel-hd/freebitco.in-Bot
 [9kw]:https://www.9kw.eu/register_104519.html
 [freebitcoin]:http://freebitco.in/?r=1327941
